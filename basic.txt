@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+    label 'labels3'
+}
+    stages {
+        stage('Build') {
+            steps {
+                echo 'build process'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'test process'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'deploy process'
+            }
+        }
+    }
+}
