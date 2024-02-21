@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+        label 'tag-1'
+    }
+    stages {
+        stage('git commit') {
+            steps {
+                echo 'pulling source code from github repositery'
+                git 'https://github.com/kedar9373/student-ui.git'
+            }
+        }
+        stage('mvn build') {
+            steps {
+                sh '''
+                sudo apt update
+                sudo apt install maven -y
+                sudo mvn clean 
+                sudo mvn package
+                echo "maven build the required artifacts.."
+                '''
+            }
+        }
+        stage('awscli installation ') {
+            steps {
+                sh '''sudo apt install awscli -y
+                sudo aws s3 cp target s3://kedar123/target --recursive'''
+                echo 'installed awscli in node '
+            }
+        }
+       stage('tomcat application') {
+            steps {
+               sh '''
+                sudo curl -O https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.98/bin/apache-tomcat-8.5.98.tar.gz
+                sudo tar -xvf apache-tomcat-8.5.98.tar.gz 
+                sudo cp target/studentapp-2.2-SNAPSHOT.war apache-tomcat-8.5.98/webapps/
+                  sudo bash /home/ubuntu/workspace/pipeline/apache-tomcat-8.5.98/bin/catalina.sh start
+                '''
+                echo 'tomcat installation in node '
+            }
+        }
+    
+    }
+}
