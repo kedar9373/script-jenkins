@@ -1,0 +1,21 @@
+pipeline {
+    agent {
+        label 'label1'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh '''sudo apt install apache2 -y
+                      sudo apt update -y
+                      sudo apt install unzip
+                      sudo curl -O https://www.free-css.com/assets/files/free-css-templates/download/page287/cakezone.zip
+                      sudo unzip cakezone.zip
+                      sudo cp -r cake-shop-website-template/* /var/www/html
+                      sudo systemctl restart apache2
+                      '''
+                
+            }
+        }
+        
+    }
+}
